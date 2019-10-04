@@ -165,7 +165,7 @@ async def crawler(dir):
         chapters = (await getChapters(session,url))[start - 1:end]
         end = min(end,len(chapters))
 
-        if SLICE_FLAG:
+        if not SLICE_FLAG:
             SLICE = DONT_SLICE
 
         for i,chapter in enumerate(chapters):
