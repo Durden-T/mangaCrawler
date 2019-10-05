@@ -18,7 +18,7 @@ def main():
         print('kuku漫画找不到该资源')
         return
 
-    print('下载完成，耗时{}s'.format(int(time.time() - startTime)),'转换为pdf中')
+    print('下载完成，共耗时{}s'.format(int(time.time() - startTime)),'转换为pdf中')
     img2pdf(rootDir + name)
     print('转换完成')
     

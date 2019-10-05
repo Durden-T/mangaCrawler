@@ -130,24 +130,10 @@ async def crawler(dir):
     global SLICE
 
     rootDir = dir
-
     if not os.path.exists(rootDir):
         os.mkdir(rootDir)
 
     name = input('漫画名：')
-
-    while True:
-        try:
-            _ = input('请输入开始话与结束话:').split()
-            start,end = (int)(_[0]),(int)(_[1])
-        except:
-            print('非法输入')
-        else:
-            break
-
-    c = input('输入y启用分段下载（适用超长篇漫画,默认关闭，默认下载失败时请启用），输入任意字符关闭:')
-    
-    SLICE_FLAG = c == 'y'
 
     conn = aiohttp.TCPConnector(limit=150,ssl = False)
     timeout = aiohttp.ClientTimeout(total=defaultTimeout)
@@ -162,8 +148,23 @@ async def crawler(dir):
 
         tasks = []
         #only in [start,end]
-        chapters = (await getChapters(session,url))[start - 1:end]
-        end = min(end,len(chapters))
+        chapters = await getChapters(session,url)
+        print('共有{}话'.format(len(chapters)))
+
+        while True:
+            try:
+                _ = input('请输入开始话与结束话:').split()
+                start,end = (int)(_[0]),(int)(_[1])
+            except:
+                print('非法输入')
+            else:
+                break
+
+        c = input('输入y启用分段下载（适用超长篇漫画,默认关闭，默认下载失败时请启用），按下Enter键关闭:')
+    
+        SLICE_FLAG = c == 'y'
+
+        chapters = chapters[start - 1:end]
 
         if not SLICE_FLAG:
             SLICE = DONT_SLICE
